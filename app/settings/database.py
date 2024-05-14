@@ -1,3 +1,4 @@
+import re
 import mariadb
 from dotenv import load_dotenv
 import os
@@ -21,35 +22,24 @@ def connect():
         database=MYSQL_DB,
         port=PORT
     )
+      
+def exec_sql_file(sql_file):
+    statement = ""
+    for line in open(sql_file):
+        conn = connect()
+        cursor = conn.cursor()
+        if re.match(r'--', line):  # ignore sql comment lines
+            continue
+        if not re.search(r';$', line):  # keep appending lines that don't end in ';'
+            statement = statement + line
+        else:  # when you get a line ending in ';' then exec statement and reset for next statement
+            statement = statement + line
+            cursor.execute(statement)
+            statement = ""    
+            conn.commit()
+            conn.close()
+
     
-def init_db():
-    basic_queries([
-        ('''CREATE OR REPLACE TABLE characters (
-            id int auto_increment primary key not null, 
-            classe varchar(100) not null, 
-            nom varchar(255) not null, 
-            serveur varchar(100) not null, 
-            isdeleted boolean,
-            creation_date DATETIME, 
-            modification_date DATETIME
-            )''', 
-            None),
-        ('''INSERT INTO characters 
-            (nom, classe, serveur, isdeleted, creation_date, modification_date) 
-            VALUES ("Zoelhya", "eliotrope", "Tylezia", false, ?, ?)''', 
-            (datetime.now(), datetime.now())
-            ),
-        ('''INSERT INTO characters 
-            (nom, classe, serveur, isdeleted, creation_date, modification_date) 
-            VALUES ("Cataliama", "cra", "Tylezia", false, ?, ?)''', 
-            (datetime.now(), datetime.now())
-        ),
-        ('''INSERT INTO characters 
-            (nom, classe, serveur, isdeleted, creation_date, modification_date) 
-            VALUES ("Palancar", "eniripsa", "Tylezia", false, ?, ?)''', 
-            (datetime.now(), datetime.now())
-        )
-        ])
  
 def basic_query(query :str, value :tuple = None):
     conn = connect()

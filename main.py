@@ -1,20 +1,8 @@
-import os
-from dotenv import load_dotenv
 from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
 from app.routers import KPI_router
-from app.settings.database import init_db
+from app.settings.database import exec_sql_file
 
 app = FastAPI()
-init_db()
+exec_sql_file("app/scripts/init.sql")
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins = os.getenv("ALLOWED_ORIGINS"),
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
-app.include_router(KPI_router.router)
-
+app.include_router(KPI_router.router) 
