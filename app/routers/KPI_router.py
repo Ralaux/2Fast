@@ -1,10 +1,7 @@
-from bson import ObjectId
 from fastapi import APIRouter, HTTPException
 import mariadb
 
-from app.models.data import character_model
-from app.settings import database
-from app.settings.database import connect
+from app.settings.database import connect, basic_query
 
 
 router = APIRouter()
@@ -20,20 +17,11 @@ async def root():
     response_description="Get a single character by its ID",
     #response_model=character_model,
     response_model_by_alias=False,
-)
+) 
 async def show_character(id: str):
-    conn = connect()
-    cursor = conn.cursor()
-    querry = '''SELECT * FROM characters WHERE ID = ?'''
+    query = '''SELECT * FROM characters WHERE char_id = ?'''
     values = (id,)
-    try: 
-        cursor.execute(querry, values)
-    except mariadb.Error as e: 
-        print(f"Error: {e}")
-    conn.commit()
-    conn.close()
-    result = cursor.fetchone()
+    result = basic_query(query,values)
     if (result):
-        return result
-
+        return result.fetchone()
     raise HTTPException(status_code=404, detail=f"Data {id} not found")

@@ -13,7 +13,7 @@ CREATE TABLE `characters` (
     `isdeleted` boolean,
     `creation_date` DATETIME, 
     `modification_date` DATETIME
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 DROP TABLE IF EXISTS `stats`;
 CREATE TABLE `stats` (
@@ -24,7 +24,7 @@ CREATE TABLE `stats` (
   `chance` int NOT NULL,
   `intelligence` int NOT NULL,
   FOREIGN KEY (`char_id`) REFERENCES `characters`(`char_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 INSERT INTO characters (nom, classe, serveur, isdeleted, creation_date, modification_date) VALUES ("Zoelhya", "eliotrope", "Tylezia", false, Now(), Now());
 INSERT INTO characters (nom, classe, serveur, isdeleted, creation_date, modification_date) VALUES ("Cataliama", "cra", "Tylezia", false, Now(), Now());
